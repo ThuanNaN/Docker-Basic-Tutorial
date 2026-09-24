@@ -1,8 +1,8 @@
-from flask import Flask
+from fastapi import FastAPI
 
-app = Flask(__name__)
+app = FastAPI(title="Docker Basic Tutorial")
 
-@app.route("/")
+@app.get("/")
 def home():
     return """<!DOCTYPE html>
 <html>
@@ -13,9 +13,10 @@ def home():
 </body>
 </html>"""
 
-@app.route("/health")
+@app.get("/health")
 def health():
-    return "OK", 200
+    return {"status": "OK"}
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8080)
