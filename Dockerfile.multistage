@@ -1,0 +1,11 @@
+# Giai đoạn 1: build
+FROM gcc:14 AS builder
+WORKDIR /src
+COPY server.c .
+RUN gcc -static -O2 -o server server.c
+
+# Giai đoạn 2: image chạy tinh gọn
+FROM scratch
+COPY --from=builder /src/server /server
+EXPOSE 8080
+ENTRYPOINT ["/server"]

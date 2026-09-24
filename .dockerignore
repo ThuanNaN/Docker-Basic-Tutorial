@@ -1,0 +1,24 @@
+# .dockerignore cho Docker Basic Tutorial
+.git
+node_modules
+*.log
+Dockerfile
+Dockerfile.multistage
+*.pyc
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.envrc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~

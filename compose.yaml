@@ -1,0 +1,25 @@
+services:
+  db:
+    image: redis:7
+    volumes:
+      - dbdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  web:
+    build: ./app
+    ports:
+      - "8090:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [appnet]
+  db2:
+    image: redis:7
+    networks: [appnet]
+volumes:
+  dbdata:
+networks:
+  appnet:
