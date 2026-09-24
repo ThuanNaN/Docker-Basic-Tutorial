@@ -29,17 +29,23 @@ Xem [Phần 2 - Cài đặt và bước đầu](part-02-installation.md)
 | Phần 8 | Docker Compose |
 | Phần 9 | Best practices & bảo mật |
 | Phần 10 | Production: Swarm, Kubernetes, CI/CD |
-| Lab | Bài lab tổng hợp: web-app 3 tầng |
+| Lab | Bài lab tổng hợp: FastAPI + Redis + Docker Compose |
 
 # --- Chạy bài lab ---
 
 ```bash
+# Clone cả hai repo
+git clone --recurse-submodules <repo>
+cd Docker-Basic-Tutorial
+
 # Build và chạy toàn bộ ứng dụng 3 tầng
+# Web: FastAPI Bookstore API (từ tutorial-projects/FastAPI-Tutorial)
+# DB: Redis cache
 docker compose up -d --build
 
 # Kiểm tra
 docker compose ps
-curl http://localhost:8090
+curl http://localhost:8090/docs
 
 # Dừng (giữ volume)
 docker compose down

@@ -9,13 +9,17 @@ services:
       timeout: 3s
       retries: 5
   web:
-    build: ./app
+    build: ../FastAPI-Tutorial
     ports:
-      - "8090:8080"
+      - "8090:8000"
     depends_on:
       db:
         condition: service_healthy
     networks: [appnet]
+    environment:
+      - DATABASE_URL=sqlite:///./bookstore.db
+      - SECRET_KEY=change-me-to-a-long-random-string
+      - DEBUG=false
   db2:
     image: redis:7
     networks: [appnet]
