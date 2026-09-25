@@ -76,7 +76,8 @@ celerybeat.pid
 *.aof
 *.pid
 
-# Environments (but keep .env.example if present)
+# Environments
+.env
 .envrc
 .venv/
 env/
