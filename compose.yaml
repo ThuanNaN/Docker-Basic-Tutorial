@@ -1,29 +1,51 @@
+name: bookstore
+
 services:
   db:
-    image: redis:7
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
     volumes:
-      - dbdata:/data
+      - pgdata:/var/lib/postgresql/data
+    networks: [appnet]
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      # -h 127.0.0.1: probe TCP. Without it pg_isready uses the unix socket and reports "ready"
+      # while the image's temporary init server (socket only) is still running on first start.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
-      retries: 5
-  web:
-    build: ../FastAPI-Tutorial
-    ports:
-      - "8090:8000"
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
       db:
         condition: service_healthy
     networks: [appnet]
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
     environment:
-      - DATABASE_URL=sqlite:///./bookstore.db
-      - SECRET_KEY=change-me-to-a-long-random-string
-      - DEBUG=false
-  db2:
-    image: redis:7
+      API_URL: http://backend:8000
+    ports:
+      # 127.0.0.1: the UI has no login, so it is reachable from this machine only.
+      # To open it to your network, remove "127.0.0.1:" (and add authentication first).
+      - "127.0.0.1:${FRONTEND_PORT:-7860}:7860"
+    depends_on:
+      backend:
+        condition: service_healthy
     networks: [appnet]
+    restart: unless-stopped
+
 volumes:
-  dbdata:
+  pgdata:
+
 networks:
   appnet:
