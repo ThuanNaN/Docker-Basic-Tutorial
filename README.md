@@ -8,7 +8,7 @@ Trình duyệt ──▶ frontend (Gradio :7860) ──▶ backend (FastAPI :800
                   duy nhất cổng được publish     chỉ trong mạng appnet        volume pgdata
 ```
 
-Khóa học: https://vlai.aivietnam.edu.vn/tutorials/docker-basic-tutorial
+Khóa học: https://vlai.aivietnam.edu.vn/tutorials/docker-tutorial
 
 ## Yêu cầu
 
